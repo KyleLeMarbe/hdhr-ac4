@@ -101,7 +101,7 @@ media.use("/auto/:channel", async (req, res, next) => {
         "-c:d",
         "copy",
         "-f",
-        "mpegts",
+        "mkv",
         "-",
       ])
 
