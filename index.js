@@ -82,17 +82,14 @@ media.use("/auto/:channel", async (req, res, next) => {
     })
     if (stream.status === 200) {
       const ffmpeg = spawn("/usr/bin/ffmpeg", [
-        "-nostats",
-        "-hide_banner",
-        "-loglevel",
-        "warning",
         "-i",
         "pipe:",
         "-c:v",
         "copy",
         "-c:a",
         "eac3",
-        "-strict experimental",
+        "-strict",
+        "experimental",
         "-f",
         "matroska",
         "-"
