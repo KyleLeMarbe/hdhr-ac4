@@ -88,21 +88,14 @@ media.use("/auto/:channel", async (req, res, next) => {
         "warning",
         "-i",
         "pipe:",
-        "-map",
-        "0:v",
-        "-map",
-        "0:a",
         "-c:v",
         "copy",
-        "-ar",
-        "48000",
         "-c:a",
         "eac3",
-        "-c:d",
-        "copy",
+        "-strict experimental",
         "-f",
-        "mp4",
-        "-",
+        "matroska",
+        "-"
       ])
 
       stream.data.pipe(ffmpeg.stdin)
