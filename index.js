@@ -97,7 +97,7 @@ media.use("/auto/:channel", async (req, res, next) => {
         "-strict",
         "experimental",
         "-f",
-        "matroska",
+        "mpegts",
         "-"
       ])
 
