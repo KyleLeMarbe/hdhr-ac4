@@ -82,22 +82,19 @@ media.use("/auto/:channel", async (req, res, next) => {
     })
     if (stream.status === 200) {
       const ffmpeg = spawn("/usr/bin/ffmpeg", [
-        "-i",
-        "pipe:",
-        "-map",
-        "0:v",
-        "-map",
-        "0:a",
-        "-c:v",
-        "copy",
-        "-c:a",
-        "eac3",
-        "-c:d",
-        "copy",
-        "-strict",
-        "experimental",
-        "-f",
-        "mpegts",
+        // Low-latency input options for faster channel switching
+        "-fflags", "+nobuffer+flush_packets",
+        "-flags", "low_delay",
+        "-probesize", "32768",
+        "-analyzeduration", "0",
+        "-i", "pipe:",
+        "-map", "0:v",
+        "-map", "0:a",
+        "-c:v", "copy",
+        "-c:a", "eac3",
+        "-c:d", "copy",
+        "-strict", "experimental",
+        "-f", "mpegts",
         "-"
       ])
 
