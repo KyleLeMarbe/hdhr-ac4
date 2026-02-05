@@ -129,9 +129,12 @@ media.use("/auto/:channel", async (req, res, next) => {
         console.debug(`Tuning channel ${req.params.channel}`)
       })
 
-      // Log FFmpeg errors for debugging
+      // Log FFmpeg errors for debugging (loglevel is set to warning, so only warnings/errors are output)
       ffmpeg.stderr.on("data", data => {
-        console.warn(`FFmpeg [${req.params.channel}]: ${data.toString().trim()}`)
+        const message = data.toString().trim()
+        if (message) {
+          console.warn(`FFmpeg [${req.params.channel}]: ${message}`)
+        }
       })
 
       ffmpeg.on("error", err => {
