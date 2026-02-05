@@ -5,10 +5,11 @@ WORKDIR /home
 # Install ffmpeg from Emby at build time based on architecture
 # This avoids downloading at every container startup (200MB+ download)
 ARG TARGETARCH
+ARG EMBY_VERSION=4.8.10.0
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
-      LINK="https://github.com/MediaBrowser/Emby.Releases/releases/download/4.8.10.0/emby-server-deb_4.8.10.0_amd64.deb"; \
+      LINK="https://github.com/MediaBrowser/Emby.Releases/releases/download/${EMBY_VERSION}/emby-server-deb_${EMBY_VERSION}_amd64.deb"; \
     elif [ "$TARGETARCH" = "arm64" ]; then \
-      LINK="https://github.com/MediaBrowser/Emby.Releases/releases/download/4.8.10.0/emby-server-deb_4.8.10.0_arm64.deb"; \
+      LINK="https://github.com/MediaBrowser/Emby.Releases/releases/download/${EMBY_VERSION}/emby-server-deb_${EMBY_VERSION}_arm64.deb"; \
     else \
       echo "Unknown architecture: $TARGETARCH" && exit 1; \
     fi && \

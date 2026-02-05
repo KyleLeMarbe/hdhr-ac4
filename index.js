@@ -94,9 +94,6 @@ media.use("/auto/:channel", async (req, res, next) => {
         "-c:a", "eac3",
         "-c:d", "copy",
         "-strict", "experimental",
-        // Low-latency output options
-        "-flush_packets", "1",
-        "-fflags", "+nobuffer",
         "-f", "mpegts",
         "-"
       ])
