@@ -17,6 +17,8 @@ I've only tested with Plex and VLC.
 - Supports not running on port 80 so it can run on a system like unraid.
 - Always reverses the device ID (so the emulated tuner can coexist with the real one in Plex).
 - Simplified configuration (only the `HDHR_IP` variable needs to be set).
+- **FFmpeg is pre-installed in the container** - No more waiting for Emby download on startup.
+- **Low-latency ffmpeg settings** - Faster channel switching with reduced buffering.
 
 ## How to use this docker container
 
@@ -24,9 +26,7 @@ I've only tested with Plex and VLC.
 docker run -p 5003:80 -p 5004:5004 -e HDHR_IP=192.168.0.123 ghcr.io/whichken/hdhr-ac4
 ```
 
-On startup, the container will download an Emby release and extract ffmpeg from it. It will detect amd64
-or arm64 architectures and download the appropriate release. You can override the release it uses by setting
-the `LINK` environment variable to a URL of a .deb file from https://github.com/MediaBrowser/Emby.Releases/releases.
+The container includes ffmpeg pre-installed from the Emby release, supporting both amd64 and arm64 architectures.
 
 > You can use any host port you want for port 80, but port 5004 can't be changed.
 
