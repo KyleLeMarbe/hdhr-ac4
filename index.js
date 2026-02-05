@@ -89,15 +89,15 @@ media.use("/auto/:channel", async (req, res, next) => {
         "-hide_banner",
         "-loglevel",
         "warning",
-        // Low-latency input options for faster channel switching
+        // Input options for MPEG-TS stream analysis (larger probesize/analyzeduration for stable detection)
         "-fflags",
         "+nobuffer+flush_packets",
         "-flags",
         "low_delay",
         "-probesize",
-        "32768",
+        "5000000",
         "-analyzeduration",
-        "0",
+        "5000000",
         "-i",
         "pipe:",
         "-map",
