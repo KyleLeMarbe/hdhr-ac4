@@ -52,7 +52,7 @@ app.use("/", async (req, res, next) => {
             // Swap out the HDHR IP media requests
             .replace(new RegExp(`${hdhr}:5004`, "g"), `${host[0]}:5004`)
             // Switch AC4 to AC3
-            .replace(/AC4/g, "AC3")
+            .replace(/AC4/g, "AC3"),
         )
         callback()
       },
@@ -81,6 +81,9 @@ media.use("/auto/:channel", async (req, res, next) => {
       cancelToken: cancelSource.token,
     })
     if (stream.status === 200) {
+      // Set proper content-type header for MPEG-TS so Plex knows how to handle the stream
+      res.setHeader("Content-Type", "video/MP2T")
+
       const ffmpeg = spawn("/usr/bin/ffmpeg", [
         "-nostats",
         "-hide_banner",
@@ -107,7 +110,8 @@ media.use("/auto/:channel", async (req, res, next) => {
         "48000",
         "-ac",
         "6",
-        "-channel_layout",
+        // Use -ch_layout instead of deprecated -channel_layout for FFmpeg 5.x+
+        "-ch_layout",
         "5.1",
         "-c:a",
         "eac3",
@@ -123,6 +127,25 @@ media.use("/auto/:channel", async (req, res, next) => {
 
       ffmpeg.on("spawn", () => {
         console.debug(`Tuning channel ${req.params.channel}`)
+      })
+
+      // Log FFmpeg errors for debugging (loglevel is set to warning, so only warnings/errors are output)
+      ffmpeg.stderr.on("data", data => {
+        const message = data.toString().trim()
+        if (message) {
+          console.warn(`FFmpeg [${req.params.channel}]: ${message}`)
+        }
+      })
+
+      ffmpeg.on("error", err => {
+        console.error(`FFmpeg process error on channel ${req.params.channel}: ${err.message}`)
+        cancelSource.cancel()
+      })
+
+      ffmpeg.on("exit", (code, signal) => {
+        if (code !== 0 && code !== null) {
+          console.error(`FFmpeg exited with code ${code} on channel ${req.params.channel}`)
+        }
       })
 
       res.on("error", () => {
